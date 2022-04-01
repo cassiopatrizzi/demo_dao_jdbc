@@ -49,7 +49,7 @@ public class Department implements Serializable {
 
         return getId().equals(that.getId());
     }
-    
+
     @Override
     public String toString() {
         return "Department{" +
