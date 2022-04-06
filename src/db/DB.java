@@ -17,7 +17,7 @@ public class DB {
 		if (conn == null) {
 			try {
 				Properties props = loadProperties();
-				String url = props.getProperty("dburl");
+				String url = props.getProperty("db_url");
 				conn = DriverManager.getConnection(url, props);
 			}
 			catch (SQLException e) {
@@ -27,7 +27,7 @@ public class DB {
 		return conn;
 	}
 	
-	public static void closeConnection() {
+	public static void closeConnection(ResultSet rs) {
 		if (conn != null) {
 			try {
 				conn.close();
