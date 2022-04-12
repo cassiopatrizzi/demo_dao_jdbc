@@ -1,6 +1,5 @@
 package model.dao;
 
-import db.DbException;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -8,9 +7,11 @@ import java.util.List;
 
 public interface SellerDao {
 
+    void insert(Seller seller) ;
+
     Seller findById(Integer id);
 
     List<Seller> findAll();
 
-    List<Seller> findByDepartment(Department department) throws DbException;
+    List<Seller> findByDepartment(Department department);
 }
