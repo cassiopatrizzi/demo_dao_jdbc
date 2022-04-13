@@ -55,9 +55,36 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-        finally {
-            DB.closeStatement(st);
+//        finally {
+//            DB.closeStatement(st);
+//        }
+    }
+
+    @Override
+    public void update(Seller seller) {
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ?");
+
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+            st.setInt(6, seller.getId());
+
+           st.executeUpdate();
+
         }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+//        finally {
+//            DB.closeStatement(st);
+//        }
     }
 
     @Override
@@ -82,10 +109,10 @@ public class SellerDaoJDBC implements SellerDao {
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-        finally {
-            DB.closeStatement(st);
-            DB.closeConnection(rs);
-        }
+//        finally {
+//            DB.closeStatement(st);
+//            DB.closeConnection(rs);
+//        }
         return seller;
     }
 
@@ -94,7 +121,7 @@ public class SellerDaoJDBC implements SellerDao {
         seller.setId(rs.getInt("Id"));
         seller.setName(rs.getString("Name"));
         seller.setEmail(rs.getString("Email"));
-        seller.setBaseSalary();
+        seller.setBaseSalary(0.0);
         seller.setBirthDate(rs.getDate("BirthDate"));
         seller.setDepartment(dep);
         return seller;
@@ -140,10 +167,10 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-        finally {
-            DB.closeStatement(st);
-            DB.closeConnection(rs);
-        }
+//        finally {
+//            DB.closeStatement(st);
+//            DB.closeConnection(rs);
+//        }
     }
 
     @Override
