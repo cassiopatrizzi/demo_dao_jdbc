@@ -1,17 +1,18 @@
 package application;
 
-import model.dao.DaoFactory;
 import model.dao.SellerDao;
+import model.dao.impl.SellerDaoJDBC;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         Scanner sc = new Scanner(System.in);
 
-        SellerDao sellerDao = DaoFactory.createSellerDao();
+        SellerDao sellerDao = new SellerDaoJDBC();
 
         /*
         Department department = new Department(2, null);

@@ -16,13 +16,9 @@ public class SellerDaoJDBC implements SellerDao {
 
     private Connection conn;
 
-    public SellerDaoJDBC(Connection conn) {
-
-        this.conn = conn;
-    }
-
     @Override
     public void insert(Seller seller) {
+        conn = criaConexao();
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement(
@@ -55,13 +51,14 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-//        finally {
-//            DB.closeStatement(st);
-//        }
+        finally {
+            fechaConexao(st);
+        }
     }
 
     @Override
     public void update(Seller seller) {
+        conn = criaConexao();
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement(
@@ -82,13 +79,14 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-//        finally {
-//            DB.closeStatement(st);
-//        }
+        finally {
+            fechaConexao(st);
+        }
     }
 
     @Override
     public void deleteById(Integer id) {
+        conn = criaConexao();
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
@@ -99,10 +97,14 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
+        finally {
+            fechaConexao(st);
+        }
     }
 
     @Override
     public Seller findById(Integer id) {
+        conn = criaConexao();
         PreparedStatement st = null;
         ResultSet rs = null;
         Seller seller = null;
@@ -123,10 +125,10 @@ public class SellerDaoJDBC implements SellerDao {
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-//        finally {
-//            DB.closeStatement(st);
-//            DB.closeConnection(rs);
-//        }
+        finally {
+            fechaConexao(st);
+            DB.closeConnection(rs);
+        }
         return seller;
     }
 
@@ -149,7 +151,8 @@ public class SellerDaoJDBC implements SellerDao {
     }
 
     @Override
-    public List<Seller> findAll() {
+    public List<Seller> findAll() throws SQLException {
+        conn = criaConexao();
         PreparedStatement st = null;
         ResultSet rs = null;
         Seller seller;
@@ -181,14 +184,14 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-//        finally {
-//            DB.closeStatement(st);
-//            DB.closeConnection(rs);
-//        }
+        finally {
+            fechaConexao(st);
+        }
     }
 
     @Override
-    public List<Seller> findByDepartment(Department department) throws DbException {
+    public List<Seller> findByDepartment(Department department) {
+        conn = criaConexao();
         PreparedStatement st = null;
         ResultSet rs = null;
         Seller seller;
@@ -223,9 +226,18 @@ public class SellerDaoJDBC implements SellerDao {
             throw new DbException(e.getMessage());
         }
         finally {
-            DB.closeStatement(st);
-            DB.closeConnection(rs);
+            fechaConexao(st);
+            fechaConexao(null);
         }
+    }
+
+    private Connection criaConexao() {
+        return DB.getConnection();
+    }
+
+    private void fechaConexao(PreparedStatement st) {
+        DB.closeStatement(st);
+        DB.closeConnection(null);
     }
 }
 
